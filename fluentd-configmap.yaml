@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-config
+  namespace: default
+data:
+  fluentd.conf: |
+    <source>
+      @type forward
+      port 24224
+    </source>
+    <match **>
+      @type elasticsearch
+      host "elasticsearch-service"
+      port 9200
+      logstash_format true
+    </match>
