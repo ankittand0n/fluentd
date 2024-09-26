@@ -2,4 +2,4 @@ apiVersion: v2
 name: kibana
 description: A Helm chart for deploying Kibana
 version: 0.1.0
-appVersion: "7.12.0"
+appVersion: "7.17.0"

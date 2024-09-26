@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: fluent/fluentd
-  tag: v1.14.2
+  tag: latest
   pullPolicy: IfNotPresent
 
 resources: {}
