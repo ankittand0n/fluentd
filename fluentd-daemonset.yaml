@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: fluentd
-  namespace: default
+  namespace: logging
 spec:
   selector:
     matchLabels:
@@ -14,13 +14,14 @@ spec:
     spec:
       containers:
       - name: fluentd
-        image: fluent/fluentd:v1.14-1
+        image: fluent/fluentd:latest
         volumeMounts:
-        - name: config
-          mountPath: /fluentd/etc/fluentd.conf
-          subPath: fluentd.conf
+        - name: config-volume
+          mountPath: /fluentd/etc/fluent.conf
+          subPath: fluent.conf
+        ports:
+        - containerPort: 24224
       volumes:
-      - name: config
+      - name: config-volume
         configMap:
           name: fluentd-config
-
