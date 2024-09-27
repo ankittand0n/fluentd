@@ -18,4 +18,13 @@ echo '{"message": "Hello Fluentd!"}' | nc localhost 24224
 
 
 # kubectl delete all --all --namespace default
+helm install fluentd ./helm/fluentd/ --values ./helm/fluentd/values.yaml
+helm install kibana ./helm/kibana/ --values ./helm/kibana/values.yaml
+helm upgrade --install elasticsearch ./helm/elasticsearch --values ./helm/elasticsearch/values.yaml
+
+
+helm upgrade --install fluentd ./helm/fluentd
+helm upgrade --install kibana ./helm/kibana
+helm upgrade --install elasticsearch ./helm/elasticsearch
+
 

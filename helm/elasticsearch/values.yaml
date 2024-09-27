@@ -1,8 +1,14 @@
 replicaCount: 1
 
 image:
-  repository: docker.elastic.co/elasticsearch/elasticsearch
-  tag: 7.17.0
+  repository: elasticsearch
+  tag: 8.15.2
   pullPolicy: IfNotPresent
 
-resources: {}
+
+esJavaOpts: "-Xms512m -Xmx512m"
+
+esConfig:
+  elasticsearch.yml: |
+    discovery.type: single-node
+

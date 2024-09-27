@@ -1,8 +1,8 @@
 replicaCount: 1
 
 image:
-  repository: docker.elastic.co/kibana/kibana
+  repository: elastic/kibana
   tag: 7.17.0
   pullPolicy: IfNotPresent
 
-resources: {}
+
