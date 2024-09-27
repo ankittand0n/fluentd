@@ -1,0 +1,122 @@
+To set up the entire solution in Google Cloud with Harness, Harbor, Elasticsearch, Kibana, and Fluentd, follow this comprehensive approach:
+
+### **1. Set Up Google Kubernetes Engine (GKE) for Deployments**
+
+You can use GKE as your infrastructure to run all the services.
+
+1. **Create a GKE Cluster:**
+   - Go to [GKE Console](https://console.cloud.google.com/kubernetes/list).
+   - Click on `Create Cluster`.
+   - Choose the number of nodes and regions as per your requirements.
+
+2. **Install Google Cloud SDK:**
+   - Download and install the [Google Cloud SDK](https://cloud.google.com/sdk/docs/install).
+   - Authenticate with Google Cloud:
+     ```bash
+     gcloud auth login
+     ```
+   - Connect to the GKE cluster:
+     ```bash
+     gcloud container clusters get-credentials [CLUSTER_NAME] --zone [ZONE] --project [PROJECT_ID]
+     ```
+
+### **2. Set Up Harbor on GCP**
+
+Harbor is used as your Docker image registry.
+
+1. **Deploy Harbor Using Helm:**
+   - Add the Harbor Helm repo:
+     ```bash
+     helm repo add harbor https://helm.goharbor.io
+     helm repo update
+     ```
+   - Install Harbor on your GKE cluster:
+     ```bash
+     helm install harbor harbor/harbor --namespace harbor --create-namespace
+     ```
+   - After installation, access Harbor using the external IP of the LoadBalancer service.
+
+2. **Configure Harbor:**
+   - Set up a Harbor project for your container images, e.g., `harness-testing`.
+   - Once set up, Harbor will store the container images for services like Fluentd, Elasticsearch, and Kibana.
+
+### **3. Set Up Elasticsearch, Kibana, and Fluentd on GKE**
+
+You can use Helm to deploy Elasticsearch, Kibana, and Fluentd on GKE:
+
+1. **Deploy Elasticsearch:**
+   - Add the Elastic Helm charts repo:
+     ```bash
+     helm repo add elastic https://helm.elastic.co
+     helm repo update
+     ```
+   - Deploy Elasticsearch:
+     ```bash
+     helm install elasticsearch elastic/elasticsearch --namespace logging --create-namespace
+     ```
+
+2. **Deploy Kibana:**
+   - Install Kibana using Helm:
+     ```bash
+     helm install kibana elastic/kibana --namespace logging
+     ```
+
+3. **Deploy Fluentd:**
+   - Install Fluentd to ship logs to Elasticsearch:
+     ```bash
+     helm install fluentd stable/fluentd-elasticsearch --namespace logging
+     ```
+
+### **4. Set Up Harness for CI/CD in GCP**
+
+Harness will manage the CI/CD pipeline and deployments for your application.
+
+1. **Create a Google Cloud Service Account:**
+   - Go to the [Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts).
+   - Create a service account and assign `Kubernetes Engine Developer` and `Storage Admin` roles.
+
+2. **Add a Kubernetes Cluster in Harness:**
+   - In Harness, go to `Setup` > `Cloud Providers` and add a new Kubernetes cluster.
+   - Connect Harness to your GKE cluster using the credentials and endpoint.
+
+3. **Create a Service in Harness:**
+   - In `Continuous Deployment`, create a new service for Fluentd, Elasticsearch, and Kibana.
+   - Choose the `Helm` deployment type and point to the Helm chart paths hosted in your GitHub repository.
+
+4. **Create Pipelines in Harness:**
+   - Set up a deployment pipeline that builds and deploys your Docker images from GitHub to Harbor, and then deploys them using Helm on GKE.
+
+### **5. Push Docker Images to Harbor**
+
+1. **Build Docker Images:**
+   - Build your Docker images for Fluentd, Kibana, and Elasticsearch on your local machine or CI/CD pipeline.
+   ```bash
+   docker build -t demo.goharbor.io/harness-testing/fluentd:latest ./fluentd
+   docker build -t demo.goharbor.io/harness-testing/kibana:latest ./kibana
+   docker build -t demo.goharbor.io/harness-testing/elasticsearch:latest ./elasticsearch
+   ```
+
+2. **Push Images to Harbor:**
+   ```bash
+   docker push demo.goharbor.io/harness-testing/fluentd:latest
+   docker push demo.goharbor.io/harness-testing/kibana:latest
+   docker push demo.goharbor.io/harness-testing/elasticsearch:latest
+   ```
+
+### **6. Access the Services:**
+
+- **Elasticsearch & Kibana:** You can expose Kibana and Elasticsearch via a `LoadBalancer` or `Ingress` in GKE to access the Kibana interface or query Elasticsearch from external clients.
+- **Fluentd:** Fluentd will push logs to Elasticsearch.
+
+### **7. Monitor the Deployment:**
+
+Check the status of your deployments:
+```bash
+kubectl get pods -n logging
+kubectl get svc -n logging
+```
+
+This setup provides a fully integrated GCP-based solution with Harness for CI/CD, Harbor for container registry, and a logging stack of Fluentd, Elasticsearch, and Kibana deployed via Helm charts on GKE.
+
+
+
