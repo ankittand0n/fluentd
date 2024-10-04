@@ -1,0 +1,5 @@
+apiVersion: v2
+name: loki
+description: A Helm chart for Loki
+version: 0.1.0
+appVersion: "2.0"

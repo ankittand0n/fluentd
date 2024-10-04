@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: {{ .Release.Namespace }}
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush        1
+        Log_Level    info
+        Parsers_File parsers.conf
+
+    [INPUT]
+        Name         tail
+        Path         /var/log/containers/*.log
+        Parser       docker
+        Tag          kube.*
+
+    [INPUT]
+        Name systemd
+        Tag host.*
+        Systemd_Filter _SYSTEMD_UNIT=kubelet.service
+        Read_From_Tail On
+
+    [FILTER]
+        Name         kubernetes
+        Match        kube.*
+        Kube_URL     https://kubernetes.default.svc:443
+        Merge_Log    On
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude On
+
+    [OUTPUT]
+        Name         loki
+        Match        *
+        Host         loki
+        Port         3100
+        Labels       job=fluent-bit
+        Auto_Kubernetes_Labels On
+
+  parsers.conf: |
+    [PARSER]
+        Name        docker
+        Format      json
+        Time_Key    time
+        Time_Format %Y-%m-%dT%H:%M:%S.%L
+        Time_Keep   On
+        # Command     |  Decoder | Field | Optional Action
+        # ============|==================|=================
+        Decode_Field_As   escaped_utf8    log

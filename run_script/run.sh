@@ -5,6 +5,10 @@ kind delete cluster --name logging-cluster
 # Create a Kubernetes cluster using kind
 kind create cluster --name logging-cluster
 
+kubectl config use-context kind-logging-cluster
+
+
+# Install Helm
 helm repo add elastic https://helm.elastic.co
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
@@ -12,6 +16,7 @@ helm repo update
 
 # Create the namespace if it doesn't exist
 kubectl create namespace logging || true
+
 
 # Install or upgrade Fluent Bit with custom values
 helm upgrade --install fluent-bit fluent/fluent-bit --namespace logging -f fluent-bit-values.yaml
