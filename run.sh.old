@@ -106,3 +106,11 @@ kubectl logs -n logging $KIBANA_POD
 
 # Check events in the logging namespace
 kubectl get events -n logging --sort-by='.metadata.creationTimestamp'kubectl describe pod -n logging $(kubectl get pods -n logging -l app=elasticsearch -o jsonpath="{.items[0].metadata.name}")
+
+
+
+kubectl delete configmap kibana-kibana-helm-scripts -n logging
+kubectl delete serviceaccount pre-install-kibana-kibana -n logging
+kubectl delete roles pre-install-kibana-kibana -n logging
+kubectl delete rolebindings pre-install-kibana-kibana -n logging
+kubectl delete job pre-install-kibana-kibana -n logging

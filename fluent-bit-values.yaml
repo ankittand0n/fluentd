@@ -6,10 +6,17 @@ backend:
     logstash_prefix: "fluentbit"
     http_user: ""
     http_passwd: ""
+    backend:
+  type: loki
+  loki:
+    host: loki
+    port: 3100
+    labels:
+      job: "fluent-bit"
 resources:
   requests:
-    cpu: "50m"
-    memory: "128Mi"
+    cpu: "100m"
+    memory: "256Mi"
   limits:
     cpu: "100m"
     memory: "256Mi"
