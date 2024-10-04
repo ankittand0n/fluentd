@@ -1,0 +1,15 @@
+backend:
+  type: es
+  es:
+    host: elasticsearch-master
+    port: 9200
+    logstash_prefix: "fluentbit"
+    http_user: ""
+    http_passwd: ""
+resources:
+  requests:
+    cpu: "50m"
+    memory: "128Mi"
+  limits:
+    cpu: "100m"
+    memory: "256Mi"

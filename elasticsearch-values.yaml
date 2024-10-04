@@ -1,0 +1,10 @@
+replicas: 1
+minimumMasterNodes: 1
+esJavaOpts: "-Xmx512m -Xms512m"
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "500m"
+    memory: "1Gi"
