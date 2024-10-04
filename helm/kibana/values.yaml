@@ -1,8 +1,0 @@
-replicaCount: 1
-
-image:
-  repository: elastic/kibana
-  tag: 7.17.0
-  pullPolicy: IfNotPresent
-
-
