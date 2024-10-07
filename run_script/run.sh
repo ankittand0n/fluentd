@@ -82,6 +82,6 @@ nohup kubectl port-forward -n logging $GRAFANA_POD 3000:3000 > /dev/null 2>&1 &
 # kubectl port-forward -n logging svc/nginx-service 8080:80
 
 # Get the Grafana admin password
-kubectl get secret --namespace logging grafana-admin-password -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
+# kubectl get secret --namespace logging grafana-admin-password -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 
 kubectl get secret --namespace logging grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
