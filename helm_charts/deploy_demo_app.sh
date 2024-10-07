@@ -35,11 +35,11 @@ if prompt_deploy_demo_app; then
 
   # Apply the Kubernetes deployment and service
   echo "Deploying the application to the Kubernetes cluster..."
-  kubectl apply -f deployment.yaml
+  kubectl apply -f deployment.yaml --namespace logging
 
   # Wait for the deployment to be ready
   echo "Waiting for the deployment to be ready..."
-  kubectl wait --for=condition=available deployment/demo-app --timeout=300s
+  kubectl wait --for=condition=available deployment/demo-app --namespace logging --timeout=300s
 
   echo "The demo application has been deployed successfully."
 else
