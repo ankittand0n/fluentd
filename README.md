@@ -25,3 +25,6 @@ To run this project, follow these steps:
       ./run.sh
       
 This will set up the local Kubernetes cluster and deploy Fluent Bit, Grafana, and Loki.
+
+DEMO URL
+https://www.youtube.com/watch?v=bf6ZtD-97tk
